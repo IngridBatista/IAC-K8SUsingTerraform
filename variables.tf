@@ -1,17 +1,13 @@
-## Azure config variables ##
 variable location {
-  default = "Central US"
+  default = "westus2"
 }
 
-## Resource group variables ##
 variable resource_group_name {
-  default = "aks_rg_teste"
+  default = "aks_rg"
 }
 
-
-## AKS kubernetes cluster variables ##
 variable cluster_name {
-  default = "aks_cluster_teste"
+  default = "aks_cluster"
 }
 
 variable "agent_count" {
@@ -19,7 +15,7 @@ variable "agent_count" {
 }
 
 variable "dns_prefix" {
-  default = "aksdemo"
+  default = "aksdns"
 }
 
 variable "ssh_public_key" {
@@ -27,13 +23,13 @@ variable "ssh_public_key" {
 }
 
 variable "admin_username" {
-    default = "demo"
+    default = "k8s"
 }
 
 variable "client_id" {
-    description = "Deve setar o nome da app"
+    description = "Sete um nome para o Service Principle a ser criado"
 }
 
 variable "client_secret" {
-    description = "Deve definir a senha da app"
+    description = "Sete uma senha para o Service Principle a ser criado"
 }

@@ -1,8 +1,9 @@
-resource "kubernetes_deployment" "nginx" {
+## Kubernetes Deployment ##
+resource "kubernetes_deployment" "wordpress_deployment" {
   metadata {
-    name = "scalable-nginx-example"
+    name = "deployment-wordpress"
     labels = {
-      App = "ScalableNginxExample"
+      App = "DeploymentWordpress"
     }
   }
 
@@ -10,33 +11,22 @@ resource "kubernetes_deployment" "nginx" {
     replicas = 1
     selector {
       match_labels = {
-        App = "ScalableNginxExample"
+        App = "DeploymentWordpress"
       }
     }
     template {
       metadata {
         labels = {
-          App = "ScalableNginxExample"
+          App = "DeploymentWordpress"
         }
       }
       spec {
         container {
           image = "wordpress"
-          name  = "example"
+          name  = "wordpress"
 
           port {
             container_port = 80
-          }
-
-          resources {
-            limits = {
-              cpu    = "0.5"
-              memory = "512Mi"
-            }
-            requests = {
-              cpu    = "250m"
-              memory = "50Mi"
-            }
           }
         }
       }
@@ -44,19 +34,24 @@ resource "kubernetes_deployment" "nginx" {
   }
 }
 
-resource "kubernetes_service" "nginx" {
+## Kubernetes Service ##
+resource "kubernetes_service" "wordpress_service" {
+  
   metadata {
-    name = "nginx-example"
+    name = "service-wordpress"
   }
+
   spec {
     selector = {
-      App = kubernetes_deployment.nginx.spec.0.template.0.metadata[0].labels.App
+      App = kubernetes_deployment.wordpress_deployment.spec.0.template.0.metadata[0].labels.App
     }
+
     port {
       port        = 80
       target_port = 80
     }
 
     type = "LoadBalancer"
+
   }
 }

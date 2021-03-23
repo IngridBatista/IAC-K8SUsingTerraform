@@ -1,20 +1,19 @@
-## Azure resource group for the kubernetes cluster ##
-resource "azurerm_resource_group" "aks_rg_teste" {
+## Azure resource group ##
+resource "azurerm_resource_group" "aks_rg" {
   name     = var.resource_group_name
   location = var.location
 }
 
 ## AKS kubernetes cluster ##
-resource "azurerm_kubernetes_cluster" "aks_cluster_teste" { 
+resource "azurerm_kubernetes_cluster" "aks_cluster" { 
   name                = var.cluster_name
-  resource_group_name = azurerm_resource_group.aks_rg_teste.name
-  location            = azurerm_resource_group.aks_rg_teste.location
+  resource_group_name = azurerm_resource_group.aks_rg.name
+  location            = azurerm_resource_group.aks_rg.location
   dns_prefix          = var.dns_prefix
 
   linux_profile {
     admin_username = var.admin_username
 
-    # SSH key is generated using "tls_private_key" resource
     ssh_key {
       key_data = file(var.ssh_public_key)
     }
@@ -27,8 +26,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster_teste" {
   }
 
   service_principal {
-    client_id     = azuread_service_principal.example.application_id
-    client_secret = azuread_service_principal_password.example.value
+    client_id     = azuread_service_principal.service_principal_k8s.application_id
+    client_secret = azuread_service_principal_password.service_principal_k8s_pass.value
   }
 
   addon_profile {
@@ -42,8 +41,7 @@ resource "azurerm_kubernetes_cluster" "aks_cluster_teste" {
     network_plugin    = "kubenet"
   }
 
-
   tags = {
-    environment = "Test"
+    environment = "Implantation"
   }
 }
